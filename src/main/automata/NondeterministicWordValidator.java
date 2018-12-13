@@ -1,4 +1,4 @@
-package main;
+package main.automata;
 
 import java.util.ArrayList;
 import java.util.Arrays;

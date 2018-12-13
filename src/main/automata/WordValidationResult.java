@@ -1,4 +1,4 @@
-package main;
+package main.automata;
 
 public enum WordValidationResult {
     Accepted("acceptat"),

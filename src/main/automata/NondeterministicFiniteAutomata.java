@@ -1,4 +1,6 @@
-package main;
+package main.automata;
+
+import main.DeterministicFiniteAutomataConverter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +9,7 @@ import java.util.*;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-public class NondeterministicFiniteAutomata implements Automatable {
+public class NondeterministicFiniteAutomata implements FiniteAutomata {
 
     private State initialState;
     private List<State> finalStates = new ArrayList<>();
@@ -48,11 +50,7 @@ public class NondeterministicFiniteAutomata implements Automatable {
                 NondeterministicStateTransition transition = new NondeterministicStateTransition(state, toStates, symbol);
                 automata.stateTransitions.add(transition);
             }
-
-
         }
-
-
         return automata;
     }
 
@@ -109,8 +107,6 @@ public class NondeterministicFiniteAutomata implements Automatable {
         DeterministicFiniteAutomataConverter converter = new DeterministicFiniteAutomataConverter(this);
         return converter.convert();
     }
-
-
 
     public State getInitialState() {
         return initialState;

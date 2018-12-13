@@ -1,5 +1,7 @@
 package main;
 
+import main.automata.*;
+
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -20,7 +22,7 @@ public class DeterministicFiniteAutomataConverter {
 
     public DeterministicFiniteAutomata convert() {
 
-        DeterministicAutomataConverterBundle bundle = new DeterministicAutomataConverterBundle();
+        DeterministicAutomataLanguageBundle bundle = new DeterministicAutomataLanguageBundle();
 
         statesToProcess.put(automata.getInitialState(), false);
 

@@ -1,6 +1,6 @@
-package main;
+package main.automata;
 
-public class State {
+public class State implements Comparable<State> {
 
     private static final String INITIAL_STATE_SYMBOL = "-";
     private static final String FINAL_STATE_SYMBOL = "+";
@@ -40,6 +40,10 @@ public class State {
         return symbol;
     }
 
+    public String toString(boolean scriptic) {
+        return symbol + (isInitial() ? INITIAL_STATE_SYMBOL : BLANK_SYMBOL) + (isFinal() ? FINAL_STATE_SYMBOL : BLANK_SYMBOL);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof State) {
@@ -54,6 +58,29 @@ public class State {
 
     @Override
     public int hashCode() {
-        return Character.getNumericValue(symbol.charAt(0));
+        int sum = 0;
+
+        for (char chr : symbol.toCharArray()) {
+            sum += Character.getNumericValue(chr);
+        }
+
+        return sum;
+    }
+
+    @Override
+    public int compareTo(State o) {
+        return this.symbol.equals(o.symbol) ? 0 : 1;
+    }
+
+    public void setInitial(boolean isInitial) {
+        this.isInitial = isInitial;
+    }
+
+    public boolean contains(State finalState) {
+        return toString().contains(finalState.toString());
+    }
+
+    public void setFinal(boolean isFinal) {
+        this.isFinal = isFinal;
     }
 }

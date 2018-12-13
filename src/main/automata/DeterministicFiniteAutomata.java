@@ -1,14 +1,11 @@
-package main;
+package main.automata;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import main.DeterministicAutomataLanguageBundle;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
+import java.io.*;
+import java.util.*;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * In the source file, the first line is made up of the alphabet characters, separated by a space.
@@ -16,17 +13,18 @@ import static java.util.stream.Collectors.toList;
  * There's a table being formed, so
  */
 
-public class DeterministicFiniteAutomata implements Automatable {
+public class DeterministicFiniteAutomata implements FiniteAutomata {
 
-    private List<String> alphabet;
-    private List<State> states;
+    private static final String OUTFILE_PATH = "res/output_dfa.txt";
+    private List<String> alphabet = new ArrayList<>();
+    private List<State> states = new ArrayList<>();
     private State initialState;
-    private List<State> finalStates;
-    private List<DeterministicStateTransition> stateTransitions;
+    private List<State> finalStates = new ArrayList<>();
+    private List<DeterministicStateTransition> stateTransitions = new ArrayList<>();
 
     public DeterministicFiniteAutomata() { }
 
-    public DeterministicFiniteAutomata(DeterministicAutomataConverterBundle bundle) {
+    public DeterministicFiniteAutomata(DeterministicAutomataLanguageBundle bundle) {
         this.alphabet = bundle.getAlphabet();
         this.stateTransitions = bundle.getStateTransitions();
         this.initialState = bundle.getInitialState();
@@ -59,7 +57,6 @@ public class DeterministicFiniteAutomata implements Automatable {
 
             automata.states.add(state);
 
-
             for (int i = 0; i < automata.alphabet.size(); i++) {
                 State toState = new State(lineArgs[i + 1]);
                 String symbol = automata.alphabet.get(i);
@@ -68,7 +65,6 @@ public class DeterministicFiniteAutomata implements Automatable {
                 automata.stateTransitions.add(stateTransition);
             }
         }
-
 
         return automata;
     }
@@ -109,6 +105,26 @@ public class DeterministicFiniteAutomata implements Automatable {
                 .findFirst();
     }
 
+    public List<String> getAlphabet() {
+        return alphabet;
+    }
+
+    public List<State> getStates() {
+        return states;
+    }
+
+    public State getInitialState() {
+        return initialState;
+    }
+
+    public List<State> getFinalStates() {
+        return finalStates;
+    }
+
+    public List<DeterministicStateTransition> getStateTransitions() {
+        return stateTransitions;
+    }
+
     @Override
     public String toString() {
         String statesList = states.stream().map(Object::toString).collect(joining(", "));
@@ -116,5 +132,32 @@ public class DeterministicFiniteAutomata implements Automatable {
         String alphabetList = alphabet.stream().map(Object::toString).collect(joining(", "));
 
         return String.format("DFA = (states: {%s}, initial: %s, finals: {%s}, alphabet: {%s})", statesList, initialState, finalStatesList, alphabetList);
+    }
+
+    public void writeToFile() throws IOException {
+        File file = new File(OUTFILE_PATH);
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(OUTFILE_PATH, true));
+        
+        String alphabet = String.join(" ", this.alphabet);
+        writer.write(alphabet);
+        writer.newLine();
+
+        Map<State, List<State>> transitionsMap = stateTransitions.stream()
+                .collect(groupingBy(DeterministicStateTransition::getFrom,
+                        mapping(DeterministicStateTransition::getTo, toList())));
+
+        List<String> transitionsTexts = transitionsMap.entrySet().stream()
+                .map(e -> String.format("%s %s",
+                        e.getKey().toString(true),
+                        e.getValue().stream().map(Object::toString).collect(joining(" "))))
+                .collect(toList());
+
+        for (String t : transitionsTexts) {
+            writer.write(t);
+            writer.newLine();
+        }
+
+        writer.close();
     }
 }

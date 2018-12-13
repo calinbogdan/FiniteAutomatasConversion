@@ -1,4 +1,4 @@
-package main;
+package main.automata;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,9 +1,12 @@
 package main;
 
+import main.automata.DeterministicStateTransition;
+import main.automata.State;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeterministicAutomataConverterBundle {
+public class DeterministicAutomataLanguageBundle {
 
     private State initialState;
     private List<State> states = new ArrayList<>();
